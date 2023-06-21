@@ -1,1 +1,8 @@
 <p>cart works!</p>
+<p>{{ ($loading | async) ? 'Loading' : "Not Loading" }}</p>
+
+<pre *ngIf="$cart | async as currentCart; else create">{{ currentCart | json }}</pre>
+
+<ng-template #create>
+    <button mat-raised-buttton type="button" (click)="onCreateCartClick()">Create a new Cart</button>
+</ng-template>

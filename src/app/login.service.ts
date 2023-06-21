@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TokenService } from './token.service';
 import { environment } from '../environments/environment';
 import { catchError, tap } from 'rxjs';
-import { LoginData } from './types';
+import { LoginApiResponse, LoginData } from './types';
 
 @Injectable({
   providedIn: 'root',
@@ -26,14 +26,3 @@ export class LoginService {
       );
   }
 }
-
-interface ApiResponse<T> {
-  statusCode: number;
-  data: T;
-}
-
-interface LoginResponse {
-  token: string;
-}
-
-type LoginApiResponse = ApiResponse<LoginResponse>;
