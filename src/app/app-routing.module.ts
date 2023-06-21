@@ -7,12 +7,27 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { CartModule } from './cart/cart.module';
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
+import { authGuard } from './auth.guard';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
-  { path: 'cart', component: CartComponent },
-  { path: 'product', component: ProductComponent },
-  { path: 'user', component: UserComponent },
-  { path: '', redirectTo: '/cart', pathMatch: 'full' },
+  { path: 'cart', component: CartComponent, canActivate: [authGuard] },
+  {
+    path: 'product',
+    component: ProductComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'user',
+    component: UserComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: '',
+    redirectTo: '/cart',
+    pathMatch: 'full',
+  },
+  { path: 'login', component: LoginComponent },
   { path: '**', component: NotFoundComponent },
 ];
 

@@ -1,3 +1,9 @@
 mat-toolbar {
     gap: 10px
 }
+
+mat-toolbar > div {
+    display: flex;
+    width: 100%;
+    gap: 10px
+}
