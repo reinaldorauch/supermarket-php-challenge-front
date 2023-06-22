@@ -3,7 +3,6 @@
     <div *ngIf="loggedIn$ | async">
         <a mat-raised-button routerLink="cart">Cart</a>
         <a mat-raised-button routerLink="product">Products</a>
-        <a mat-raised-button routerLink="product/type">Product Types</a>
         <a mat-raised-button routerLink="users">Users</a>
         <span style="flex-grow: 1;"></span>
         <button mat-raised-button [matMenuTriggerFor]="menu">{{(this.currentUsername$ | async) || 'Username'}}</button>
