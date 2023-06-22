@@ -2,17 +2,40 @@
     <mat-grid-tile>
         <mat-card class='cart-item'>
             <h1>Products</h1>
-            <mat-list>
-                <mat-list-item *ngFor="let item of currentCart.items">
-                    <h3>{{item.product?.name}}</h3>
-                    <p>Price: {{item.product?.price}}</p>
-                </mat-list-item>
-            </mat-list>
+            <table mat-table [dataSource]="currentCartItems$">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let item">{{ item.product.name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef>Quantity</th>
+                    <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+                </ng-container>
+    
+                <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef>Type</th>
+                    <td mat-cell *matCellDef="let item">{{ item.product.type.name }}</td>
+                </ng-container>
+            
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef>Price</th>
+                    <td mat-cell *matCellDef="let item">{{(item.product.price / 100) | currency}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
             <form [formGroup]="addItemForm" (ngSubmit)="onAddItemSubmit()">
                 <mat-form-field>
                     <mat-label>Product</mat-label>
                     <mat-select formControlName="productId">
-                        <mat-option *ngFor="let product of $products | async" [value]="product.id">{{product.name}} - {{(product.price/100) | currency}}</mat-option>
+                        <mat-option 
+                            *ngFor="let product of products$ | async" 
+                            [value]="product.id"
+                        >
+                            {{product.name}} - {{(product.price/100) | currency}}
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field>
@@ -27,6 +50,10 @@
     <mat-grid-tile>
         <mat-card class='cart-item'>
             <h1>Totalization</h1>
+
+            <h1>{{ (currentCart.totalTax / 100) | currency }}</h1>
+
+            <h1>{{ (currentCart.total / 100) | currency }}</h1>
         </mat-card>
     </mat-grid-tile>
     

@@ -3,6 +3,8 @@ import { CartService } from '../cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ProductsService } from '../../product/products.service';
+import { map, switchMap } from 'rxjs';
+import { AddItemData, CheckoutCart } from '../../types';
 
 @Component({
   selector: 'app-cart',
@@ -11,11 +13,14 @@ import { ProductsService } from '../../product/products.service';
 })
 export class CartComponent implements OnInit {
   $cart = this.svc.currentCart;
+  currentCartItems$ = this.$cart.pipe(map((cart) => cart?.items ?? []));
+
+  displayedColumns = ['name', 'quantity', 'type', 'price'];
   $loading = this.svc.isLoading;
-  $products = this.productsService.products;
+  products$ = this.productsService.products;
 
   addItemForm = this.formBuilder.group({
-    productId: [null, Validators.required],
+    productId: [0, Validators.required],
     quantity: [1, Validators.required],
   });
 
@@ -34,10 +39,32 @@ export class CartComponent implements OnInit {
     try {
       this.svc.create();
     } catch (err: any) {
-      const msg = err?.error?.error?.description || 'Error when creating cart';
-      this.snackbar.open(msg, undefined, { duration: 300 });
+      this.snackbar.open(
+        err?.error?.error?.description || 'Error when creating cart',
+        undefined,
+        { duration: 500 }
+      );
     }
   }
 
-  onAddItemSubmit() {}
+  onAddItemSubmit() {
+    if (!this.addItemForm.valid) {
+      this.snackbar.open('Add item data invalid', undefined, { duration: 500 });
+      return;
+    }
+
+    try {
+      const cartId = this.svc.getCurrentCartId();
+      if (!cartId) {
+        throw new Error('Cart not active');
+      }
+      this.svc.addItem({ ...(this.addItemForm.value as AddItemData), cartId });
+    } catch (err: any) {
+      this.snackbar.open(
+        err?.error?.error?.description || 'Error when adding item to the cart',
+        undefined,
+        { duration: 500 }
+      );
+    }
+  }
 }

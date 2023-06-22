@@ -8,13 +8,13 @@ import {
   tap,
 } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CheckoutCart, CartResponse } from '../types';
+import { CheckoutCart, CartResponse, AddItemData } from '../types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private $currentCart = new Subject<CheckoutCart | null>();
+  private $currentCart = new BehaviorSubject<CheckoutCart | null>(null);
   private $isLoading = new BehaviorSubject(false);
   constructor(private http: HttpClient) {}
 
@@ -24,6 +24,10 @@ export class CartService {
 
   get currentCart() {
     return this.$currentCart.asObservable();
+  }
+
+  getCurrentCartId(): number | undefined {
+    return this.$currentCart.value?.id;
   }
 
   async init() {
@@ -54,6 +58,22 @@ export class CartService {
         this.http.post<CartResponse>(`${environment.apiBase}/checkout-cart`, '')
       );
       this.$currentCart.next(cart);
+    } catch (err: any) {
+      throw err;
+    } finally {
+      this.$isLoading.next(false);
+    }
+  }
+  async addItem({ cartId, ...data }: AddItemData) {
+    this.$isLoading.next(true);
+    try {
+      await firstValueFrom(
+        this.http.post<CartResponse>(
+          `${environment.apiBase}/checkout-cart/${cartId}/add`,
+          data
+        )
+      );
+      this.init();
     } catch (err: any) {
       throw err;
     } finally {

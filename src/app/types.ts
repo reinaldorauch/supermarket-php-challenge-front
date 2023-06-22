@@ -3,6 +3,12 @@ export interface LoginData {
   password: string;
 }
 
+export interface AddItemData {
+  cartId: number;
+  productId: number;
+  quantity: number;
+}
+
 export interface ProductType {
   id: number;
   name: string;
@@ -25,9 +31,10 @@ export interface CheckoutCartItem {
 }
 
 export interface CheckoutCart {
+  id: number;
   items: CheckoutCartItem[];
   total: number;
-  taxTotal: number;
+  totalTax: number;
 }
 
 export interface ApiResponse<T> {
@@ -39,6 +46,12 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface User {
+  username: string;
+  firstName: string;
+  lastName: string;
+}
+
 export type LoginApiResponse = ApiResponse<LoginResponse>;
 
 export type CartResponse = ApiResponse<CheckoutCart>;
@@ -47,3 +60,5 @@ export type ProductsResponse = ApiResponse<Product[]>;
 export type ProductResponse = ApiResponse<Product>;
 export type TypesResponse = ApiResponse<ProductType[]>;
 export type TypeResponse = ApiResponse<ProductType>;
+export type UserResponse = ApiResponse<User>;
+export type UsersResponse = ApiResponse<User[]>;

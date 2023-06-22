@@ -6,7 +6,7 @@
         <a mat-raised-button routerLink="product/type">Product Types</a>
         <a mat-raised-button routerLink="users">Users</a>
         <span style="flex-grow: 1;"></span>
-        <button mat-raised-button [matMenuTriggerFor]="menu">Username</button>
+        <button mat-raised-button [matMenuTriggerFor]="menu">{{(this.currentUsername$ | async) || 'Username'}}</button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item  type=button (click)="onLogoutClick()">Logout</button>
         </mat-menu>
