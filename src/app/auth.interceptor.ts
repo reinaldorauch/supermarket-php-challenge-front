@@ -4,13 +4,17 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
+  HttpEventType,
+  HttpStatusCode,
+  HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, tap } from 'rxjs';
 import { TokenService } from './token.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService, private router: Router) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -25,6 +29,30 @@ export class AuthInterceptor implements HttpInterceptor {
       headers: request.headers.set('Authorization', `Bearer ${token}`),
     });
 
-    return next.handle(authReq);
+    return next.handle(authReq).pipe(
+      tap((ev) => {
+        if (
+          ev.type === HttpEventType.ResponseHeader &&
+          ev.status === HttpStatusCode.Unauthorized
+        ) {
+          this.logout();
+        }
+      }),
+      catchError((err) => {
+        if (
+          err instanceof HttpErrorResponse &&
+          err.status === HttpStatusCode.Unauthorized
+        ) {
+          this.logout();
+        }
+        throw err;
+      })
+    );
+  }
+
+  private logout() {
+    this.tokenService.clear();
+    this.router.navigate(['/login']);
+    throw new Error('not logged in');
   }
 }

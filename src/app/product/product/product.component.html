@@ -1,1 +1,83 @@
-<p>product works!</p>
+<div class="main-container">
+    <div class="container">
+        <h1>Product List</h1>
+
+        <mat-card class="form">
+            <form [formGroup]="productForm" (ngSubmit)="onProductSubmit()">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput type="text" formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Price</mat-label>
+                    <input matInput type="number" step="0.01" formControlName="price">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Type</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option *ngFor="let t of types$ | async" [value]="t.id">{{t.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary">Save</button>
+            </form>
+        </mat-card>
+        
+        <table mat-table [dataSource]="productsDataSource$" class="mat-elevation-z1">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let prod">{{prod.name}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let prod">{{ prod.type.name }}</td>
+            </ng-container>
+        
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let prod">{{(prod.price/100) | currency}}</td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedProductColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedProductColumns;"></tr>
+        </table>
+    </div>
+
+    <div class="container">
+        <h1>Product Types List</h1>
+
+        <mat-card class="form">
+            <form [formGroup]="productTypeForm" (ngSubmit)="onProductTypeSubmit()">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput type="text" formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Tax Rate</mat-label>
+                    <input matInput type="number" formControlName="taxRate">
+                </mat-form-field>
+
+                <button mat-raised-button color="primary">Save</button>
+            </form>
+        </mat-card>
+        
+        <table mat-table [dataSource]="typesDataSource$" class="mat-elevation-z1">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let prod">{{prod.name}}</td>
+            </ng-container>
+        
+            <ng-container matColumnDef="taxRate">
+                <th mat-header-cell *matHeaderCellDef>Tax Rate</th>
+                <td mat-cell *matCellDef="let prod">{{ prod.taxRate }} %</td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedTypeColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedTypeColumns;"></tr>
+        </table>
+    </div>
+</div>

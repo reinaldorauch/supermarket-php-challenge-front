@@ -4,11 +4,13 @@ export interface LoginData {
 }
 
 export interface ProductType {
+  id: number;
   name: string;
   taxRate: number;
 }
 
 export interface Product {
+  id: number;
   name: string;
   price: number;
   type: ProductType | number;
@@ -40,3 +42,8 @@ export interface LoginResponse {
 export type LoginApiResponse = ApiResponse<LoginResponse>;
 
 export type CartResponse = ApiResponse<CheckoutCart>;
+
+export type ProductsResponse = ApiResponse<Product[]>;
+export type ProductResponse = ApiResponse<Product>;
+export type TypesResponse = ApiResponse<ProductType[]>;
+export type TypeResponse = ApiResponse<ProductType>;
