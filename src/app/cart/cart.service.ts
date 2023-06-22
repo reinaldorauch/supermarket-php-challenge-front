@@ -26,6 +26,10 @@ export class CartService {
     return this.$currentCart.asObservable();
   }
 
+  getCurrentCart(): CheckoutCart | null {
+    return this.$currentCart.value;
+  }
+
   getCurrentCartId(): number | undefined {
     return this.$currentCart.value?.id;
   }
@@ -64,6 +68,7 @@ export class CartService {
       this.$isLoading.next(false);
     }
   }
+
   async addItem({ cartId, ...data }: AddItemData) {
     this.$isLoading.next(true);
     try {
@@ -71,6 +76,23 @@ export class CartService {
         this.http.post<CartResponse>(
           `${environment.apiBase}/checkout-cart/${cartId}/add`,
           data
+        )
+      );
+      this.init();
+    } catch (err: any) {
+      throw err;
+    } finally {
+      this.$isLoading.next(false);
+    }
+  }
+
+  async finalize(cartId: number) {
+    this.$isLoading.next(true);
+    try {
+      await firstValueFrom(
+        this.http.post<CartResponse>(
+          `${environment.apiBase}/checkout-cart/${cartId}/finalize`,
+          ''
         )
       );
       this.init();

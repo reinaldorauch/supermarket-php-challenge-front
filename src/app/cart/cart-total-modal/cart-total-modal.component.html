@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Cart #{{ data.id }} finalized with success!</h1>
+
+<div mat-dialog-content>
+    <h2>Total item count</h2>
+    <p>{{ totalItemCount }}</p>
+    <h2>Cart total</h2>
+    <p>{{ (data.total / 100) | currency}}</p>
+    <h2>Tax Total</h2>
+    <p>{{ (data.totalTax / 100) | currency}}</p>
+    <h2>Cart Total With Tax</h2>
+    <p>{{ ((data.total + data.totalTax) / 100) | currency}}</p>
+</div>
+
+<mat-dialog-actions class="action-buttons">
+    <button mat-button [mat-dialog-close]>Close</button>
+    <button mat-button (click)="printInvoiceClick()" cdkFocusInitial>Print Invoice</button>
+</mat-dialog-actions>

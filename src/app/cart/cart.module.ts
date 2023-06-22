@@ -12,9 +12,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CartTotalModalComponent } from './cart-total-modal/cart-total-modal.component';
 
 @NgModule({
-  declarations: [CartComponent],
+  declarations: [CartComponent, CartTotalModalComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -25,6 +27,7 @@ import { MatTableModule } from '@angular/material/table';
     MatSelectModule,
     MatButtonModule,
     MatTableModule,
+    MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
